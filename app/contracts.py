@@ -1,7 +1,11 @@
 """跨区域运力调度 的输入输出约定。"""
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Any
+
+def utcnow() -> datetime:
+    """无时区的 UTC 当前时间，与库中存储的时间格式保持一致。"""
+    return datetime.now(timezone.utc).replace(tzinfo=None)
 
 @dataclass(frozen=True)
 class Request:
@@ -9,7 +13,7 @@ class Request:
     action: str
     payload: dict[str, Any]
     request_id: str
-    created_at: datetime = field(default_factory=datetime.utcnow)
+    created_at: datetime = field(default_factory=utcnow)
 
 @dataclass
 class Result:
